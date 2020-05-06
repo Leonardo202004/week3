@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+     <mapper namespace="com.fengzhiwei.house.dao.HouseDao">
+     	<!-- 批量添加 -->
+     	<insert id="insertBatch">
+     		insert into house(name,created,phone,tid,content) values
+     		<foreach collection="list" item="h" separator=",">
+     			(#{h.name},#{h.created},#{h.phone},#{h.tid},#{h.content})
+     		</foreach>
+     	</insert>
+     	<!-- 单条添加 -->
+     	<insert id="insert">
+     		insert into house(name,created,phone,tid,content) values
+     			(#{h.name},#{h.created},#{h.phone},#{h.tid},#{h.content})
+     	</insert>
+     	<!-- 列表查询 -->
+     	<select id="houses" resultType="House">
+     		select h.*,t.name tname,t.price price from house h left join house_type t on h.tid=t.id
+     		<where>
+     			<if test="name!= null and name != ''">
+     				h.name like concat('%',#{name},'%')
+     			</if>
+     			<if test="phone!= null and phone != ''">
+     				and h.phone = #{phone}
+     			</if>
+     			<if test="tname!= null and tname!=''">
+     				and t.name like concat('%',#{tname},'%')
+     			</if>
+     			<if test="p1!= null and p1 != ''">
+     				and price &gt;=#{p1}
+     			</if>
+     			<if test="p2!= null and p2 != ''">
+     				and price &lt;=#{p2}
+     			</if>
+     			<if test="c1!= null and c1 != ''">
+     				and created &gt;=#{c1}
+     			</if>
+     			<if test="c2!= null and c2 != ''">
+     				and created &lt;=#{c2}
+     			</if>
+     		</where>
+     	</select>
+     </mapper>
